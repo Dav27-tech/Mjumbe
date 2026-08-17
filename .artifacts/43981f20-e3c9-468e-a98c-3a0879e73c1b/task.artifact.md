@@ -1,14 +1,14 @@
-- `[x]` Améliorer la gestion de l'Authentification (JWT)
-    - `[x]` Modifier `AuthRepository` pour inclure `getIdToken()`
-    - `[x]` Implémenter `getIdToken()` dans `AuthRepositoryImpl`
-- `[x]` Fiabiliser le mode hors-ligne et les erreurs
-    - `[x]` Modifier `failures.dart` pour des erreurs plus granulaires
-    - `[x]` Améliorer `NewsRepositoryImpl` pour un cache systématique
-    - `[x]` Améliorer l'UI de `NewsFeedPage` pour les erreurs réseau (Bannière Offline)
-- `[x]` Découplage Architectural
-    - `[x]` Refactoriser `main.dart` et `AppRouter` (Injection via GetIt)
-- `[x]` Infrastructure de Tests
-    - `[x]` Créer des mocks pour le Repository et les DataSources
-    - `[x]` Écrire des tests unitaires pour `NewsRepositoryImpl`
-    - `[x]` Écrire des tests de widgets pour `NewsFeedPage`
-- `[x]` Enrichir le `README.md` (Documentation complète)
+- `[ ]` Documentation & Maintenance
+    - `[ ]` Enrichir `README.md` (Détails API & Troubleshooting)
+    - `[ ]` Créer `CHANGELOG.md`
+- `[ ]` Sécurité Réseau & JWT
+    - `[ ]` Injecter `AuthRepository` dans `AuthInterceptor` (nécessite mise à jour `injection_container.dart`)
+    - `[ ]` Implémenter la logique de rafraîchissement explicite dans `AuthInterceptor`
+- `[ ]` Qualité du Code
+    - `[ ]` Corriger `_onToggleBookmark` dans `NewsBloc`
+- `[ ]` Tests & CI/CD
+    - `[ ]` Créer le workflow GitHub Actions (`.github/workflows/flutter.yml`)
+    - `[ ]` Écrire les tests unitaires pour `GetTopHeadlines` Use Case
+    - `[ ]` Écrire les tests unitaires pour `SearchNews` Use Case
+    - `[ ]` Écrire les tests unitaires pour `ToggleBookmark` Use Case
+- `[ ]` Vérification finale (`flutter test`)
