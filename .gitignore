@@ -52,3 +52,7 @@ app.*.symbols
 
 # Keep this file tracked
 !pubspec.lock
+
+# Masquer les clés d'environnement et secrets
+.env
+*.env
