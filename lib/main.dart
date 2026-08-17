@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Mjumbe App',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
-        routerConfig: AppRouter.createRouter(_authBloc!),
+        routerConfig: di.sl<AppRouter>().router,
       ),
     );
   }
