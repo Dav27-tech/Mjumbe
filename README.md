@@ -36,6 +36,42 @@ L'expérience utilisateur est garantie même sans connexion internet grâce à u
 
 ---
 
+## 🔧 Intégration API & Securité
+
+### NewsAPI
+L'application utilise les endpoints suivants de [NewsAPI.org](https://newsapi.org) :
+- `GET /v2/top-headlines` : Récupération des actualités à la une.
+- `GET /v2/everything` : Recherche globale dans les archives.
+
+**Paramètres clés utilisés :**
+- `apiKey` : Authentification via token.
+- `country` : Localisation (défaut: `us`).
+- `category` : Filtrage thématique.
+- `pageSize` : Nombre de résultats par page (défaut: 20).
+
+### Cycle JWT (OAuth 2.0)
+Bien que Firebase gère l'authentification, nous implémentons un flux explicite pour garantir la conformité aux standards :
+1. **Header Authorization** : Ajout automatique du jeton `Bearer <token>` via un intercepteur Dio.
+2. **Auto-Refresh** : Si une erreur `401 Unauthorized` est détectée, l'intercepteur force le rafraîchissement du jeton auprès de Firebase et rejoue la requête originale de manière transparente pour l'utilisateur.
+
+---
+
+## 🆘 Troubleshooting (Dépannage)
+
+### Problème : Écran noir au démarrage
+**Cause possible :** Firebase n'est pas initialisé ou le fichier `google-services.json` est manquant.
+**Solution :** Vérifiez la présence du fichier dans `android/app/` et assurez-vous que `Firebase.initializeApp()` est appelé dans `main.dart`.
+
+### Problème : Flux d'actualités vide
+**Cause possible :** Limites de quota NewsAPI ou pays sans résultats.
+**Solution :** Essayez de changer de catégorie ou utilisez la barre de recherche. Vérifiez votre clé API dans le fichier `.env`.
+
+### Problème : Erreur GetIt (Object not registered)
+**Cause possible :** Mélange d'imports relatifs et de chemins `package:mjumbe/`.
+**Solution :** Utilisez systématiquement des chemins `package:` pour vos imports.
+
+---
+
 ## 🧪 Tests & Qualité Logicielle
 
 La qualité du code est assurée par une suite de tests automatisés :
