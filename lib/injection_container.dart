@@ -38,18 +38,26 @@ Future<void> initDependencies() async {
         () => NetworkInfoImpl(sl<InternetConnectionChecker>()),
   );
 
-  // Remplacez 'https://newsapi.org' par l'URL de votre API si vous utilisez un proxy/backend custom
+  // ---------------------------------------------------------------------------
+  // 2. Auth Domain & Data (Requis pour l'intercepteur réseau)
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(firebaseAuth: sl<FirebaseAuth>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // 3. Network Infrastructure
+  // ---------------------------------------------------------------------------
   sl.registerLazySingleton<ApiClient>(
         () => ApiClient(
       baseUrl: 'https://newsapi.org',
-      firebaseAuth: sl<FirebaseAuth>(),
+      authRepository: sl<AuthRepository>(),
     ),
   );
 
   // ---------------------------------------------------------------------------
-  // 2. Data Sources (News Feature)
+  // 4. News Data Sources
   // ---------------------------------------------------------------------------
-  // N'oubliez pas de renseigner votre clé API NewsAPI dans apiKey
   sl.registerLazySingleton<NewsRemoteDataSource>(
         () => NewsRemoteDataSourceImpl(
       dio: sl<ApiClient>().client,
@@ -65,7 +73,7 @@ Future<void> initDependencies() async {
   );
 
   // ---------------------------------------------------------------------------
-  // 3. Repositories (News Feature)
+  // 5. Repositories (Domain Layer)
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<NewsRepository>(
         () => NewsRepositoryImpl(
@@ -76,7 +84,7 @@ Future<void> initDependencies() async {
   );
 
   // ---------------------------------------------------------------------------
-  // 4. Use Cases (News Feature)
+  // 6. Use Cases
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<GetTopHeadlines>(
         () => GetTopHeadlines(sl<NewsRepository>()),
@@ -89,7 +97,7 @@ Future<void> initDependencies() async {
   );
 
   // ---------------------------------------------------------------------------
-  // 5. Blocs / State Management
+  // 7. Blocs / State Management
   // ---------------------------------------------------------------------------
   sl.registerFactory<NewsBloc>(
      () => NewsBloc(
@@ -99,17 +107,13 @@ Future<void> initDependencies() async {
      ),
   );
 
-  // Repositories
-  sl.registerLazySingleton<AuthRepository>(
-        () => AuthRepositoryImpl(firebaseAuth: sl<FirebaseAuth>()),
-  );
-
-// Blocs
   sl.registerFactory<AuthBloc>(
         () => AuthBloc(authRepository: sl<AuthRepository>()),
   );
 
-  // Router
+  // ---------------------------------------------------------------------------
+  // 8. Navigation
+  // ---------------------------------------------------------------------------
   sl.registerLazySingleton<AppRouter>(
         () => AppRouter(sl<AuthBloc>()),
   );
