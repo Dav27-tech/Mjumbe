@@ -1,14 +1,10 @@
-- `[ ]` Documentation & Maintenance
-    - `[ ]` Enrichir `README.md` (Détails API & Troubleshooting)
-    - `[ ]` Créer `CHANGELOG.md`
-- `[ ]` Sécurité Réseau & JWT
-    - `[ ]` Injecter `AuthRepository` dans `AuthInterceptor` (nécessite mise à jour `injection_container.dart`)
-    - `[ ]` Implémenter la logique de rafraîchissement explicite dans `AuthInterceptor`
-- `[ ]` Qualité du Code
-    - `[ ]` Corriger `_onToggleBookmark` dans `NewsBloc`
-- `[ ]` Tests & CI/CD
-    - `[ ]` Créer le workflow GitHub Actions (`.github/workflows/flutter.yml`)
-    - `[ ]` Écrire les tests unitaires pour `GetTopHeadlines` Use Case
-    - `[ ]` Écrire les tests unitaires pour `SearchNews` Use Case
-    - `[ ]` Écrire les tests unitaires pour `ToggleBookmark` Use Case
-- `[ ]` Vérification finale (`flutter test`)
+- `[ ]` Sécurité Réseau & OAuth2 (Standard Industriel)
+    - `[ ]` Mettre à jour `AuthRepository` (interface) avec `getOAuth2AccessToken()`
+    - `[ ]` Mettre à jour `AuthRepositoryImpl` (implémentation)
+    - `[ ]` Optimiser `AuthInterceptor` (résilience et logs détaillés)
+- `[ ]` Couverture de Tests des Dépôts (Repositories)
+    - `[ ]` Créer `auth_repository_impl_test.dart` (SignIn, SignUp, Token)
+    - `[ ]` Compléter `news_repository_impl_test.dart` (Search, ToggleBookmark)
+- `[ ]` Feedback Utilisateur & UI
+    - `[ ]` Harmoniser les SnackBars et indicateurs de cache dans `NewsFeedPage`
+- `[ ]` Validation Finale (`flutter test`)
