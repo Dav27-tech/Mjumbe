@@ -29,7 +29,7 @@ void main() {
   testWidgets('should show loading indicator when state is NewsLoading', (tester) async {
     // arrange
     when(() => mockNewsBloc.state).thenReturn(NewsLoading());
-    when(() => mockNewsBloc.stream).thenStream(Stream.value(NewsLoading()));
+    when(() => mockNewsBloc.stream).thenAnswer((_) => Stream.value(NewsLoading()));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -45,7 +45,7 @@ void main() {
       const ArticleEntity(id: '2', title: 'Article 2'),
     ];
     when(() => mockNewsBloc.state).thenReturn(NewsLoaded(articles: tArticles));
-    when(() => mockNewsBloc.stream).thenStream(Stream.value(NewsLoaded(articles: tArticles)));
+    when(() => mockNewsBloc.stream).thenAnswer((_) => Stream.value(NewsLoaded(articles: tArticles)));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
@@ -59,7 +59,7 @@ void main() {
     // arrange
     const tMessage = 'Error message';
     when(() => mockNewsBloc.state).thenReturn(const NewsError(tMessage));
-    when(() => mockNewsBloc.stream).thenStream(Stream.value(const NewsError(tMessage)));
+    when(() => mockNewsBloc.stream).thenAnswer((_) => Stream.value(const NewsError(tMessage)));
 
     // act
     await tester.pumpWidget(createWidgetUnderTest());
