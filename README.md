@@ -18,6 +18,46 @@ Le projet suit rigoureusement les principes de la **Clean Architecture** théori
 
 ---
 
+## 🔒 Authentification & Sécurité (JWT / OAuth)
+
+Mjumbe utilise **Firebase Authentication** comme fournisseur d'identité principal. Bien que Firebase gère l'abstraction complexe, l'application est conçue pour respecter les standards JWT :
+- **Token JWT (IdToken)** : Chaque requête vers des services protégés inclut un jeton d'authentification Bearer dans les headers HTTP (via `AuthInterceptor`).
+- **Rotation des jetons** : Le système gère automatiquement le rafraîchissement des jetons expirés (Refresh Token flow) pour une session utilisateur continue et sécurisée.
+- **Exposition explicite** : Le `AuthRepository` expose une méthode `getIdToken()` permettant d'extraire le jeton brut pour une intégration avec d'autres backends si nécessaire.
+
+---
+
+## 📴 Mode Hors-ligne & Caching (Hive)
+
+L'expérience utilisateur est garantie même sans connexion internet grâce à une stratégie de cache robuste :
+1. **Cache Réseau** : Les derniers articles récupérés sont systématiquement stockés dans une "Box" Hive.
+2. **Fallback Automatique** : En cas d'échec réseau, le Repository bascule sur les données locales et informe l'utilisateur via un message convivial (SnackBar) et une `OfflineFailure` interne.
+3. **Signets (Favoris)** : Les articles marqués par l'utilisateur sont stockés dans une base de données NoSQL locale dédiée, garantissant leur accessibilité permanente.
+
+---
+
+## 🧪 Tests & Qualité Logicielle
+
+La qualité du code est assurée par une suite de tests automatisés :
+- **Tests Unitaires** : Validation de la logique des Repositories et UseCases avec **Mocktail** (ex: `NewsRepositoryImpl`).
+- **Tests de Widgets** : Vérification du comportement des composants UI en fonction des différents états BLoC.
+- **Analyse Statique** : Utilisation de `flutter_lints` pour garantir le respect des standards Dart.
+
+Pour lancer les tests :
+```bash
+flutter test
+```
+
+---
+
+## 📊 Modèles de Données (Data Models)
+
+- **ArticleEntity** : L'objet métier pur utilisé dans toute l'application.
+- **ArticleModel** : La version "technique" capable de se sérialiser en JSON et de s'adapter au stockage Hive.
+- **UserEntity** : Représentation de l'utilisateur connecté (UID, Email, etc.).
+
+---
+
 ## 🛠️ Stack Technique & Choix Technologiques
 
 | Technologie | Rôle | Pourquoi ce choix ? |
