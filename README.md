@@ -15,7 +15,7 @@ Elle permet de consulter, rechercher et sauvegarder des actualités avec une int
 - 👤 Authentification Firebase
 - 🔄 Actualisation des données
 - 🌙 Dark Glassmorphism
-- ⚡ Gestion des états et erreurs
+- ⚡ Gestion des états et erreur
 
 ---
 
