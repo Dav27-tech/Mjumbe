@@ -73,6 +73,16 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
       ToggleBookmarkEvent event,
       Emitter<NewsState> emit,
       ) async {
-    await toggleBookmark(event.article);
+    final result = await toggleBookmark(event.article);
+    
+    // Si nous sommes dans l'état NewsLoaded, on peut mettre à jour l'infoMessage en cas d'erreur
+    if (state is NewsLoaded && result.failure != null) {
+      final currentState = state as NewsLoaded;
+      emit(NewsLoaded(
+        articles: currentState.articles,
+        activeCategory: currentState.activeCategory,
+        infoMessage: result.failure?.message,
+      ));
+    }
   }
 }
