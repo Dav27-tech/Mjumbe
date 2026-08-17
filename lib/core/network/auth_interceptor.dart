@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mjumbe/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -11,11 +12,14 @@ class AuthInterceptor extends Interceptor {
       RequestOptions options,
       RequestInterceptorHandler handler,
       ) async {
-    // Récupération silencieuse du token (sans forcer le rafraîchissement)
-    final String? token = await _authRepository.getIdToken();
+    // Récupération silencieuse du token d'accès OAuth2
+    final String? token = await _authRepository.getOAuth2AccessToken();
     
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
+      if (kDebugMode) {
+        print('Network: OAuth2 Token injecté dans les headers.');
+      }
     }
     
     options.headers['Content-Type'] = 'application/json';
@@ -28,26 +32,49 @@ class AuthInterceptor extends Interceptor {
       DioException err,
       ErrorInterceptorHandler handler,
       ) async {
-    // Logique de rafraîchissement explicite en cas d'erreur 401
+    // Gestion du cycle de vie du token OAuth2 : Cas 401 Unauthorized
     if (err.response?.statusCode == 401) {
-      // On tente de forcer le rafraîchissement du token JWT (OAuth 2.0 flow)
-      final String? newToken = await _authRepository.getIdToken(forceRefresh: true);
+      if (kDebugMode) {
+        print('Network: Erreur 401 détectée. Tentative de rafraîchissement OAuth2...');
+      }
+
+      // On force le rafraîchissement du token (OAuth2 Refresh Token Flow)
+      final String? newToken = await _authRepository.getOAuth2AccessToken(forceRefresh: true);
       
       if (newToken != null) {
+        if (kDebugMode) {
+          print('Network: Nouveau token obtenu. Rejeu de la requête...');
+        }
+
         final requestOptions = err.requestOptions;
         requestOptions.headers['Authorization'] = 'Bearer $newToken';
 
-        // Rejeu de la requête initiale avec le nouveau token
-        // On crée une nouvelle instance Dio pour éviter les boucles d'intercepteurs
-        final dio = Dio();
+        // Création d'une instance temporaire pour le rejeu (évite les conflits)
+        final retryDio = Dio(BaseOptions(
+          baseUrl: requestOptions.baseUrl,
+          headers: requestOptions.headers,
+        ));
+        
         try {
-          final response = await dio.fetch(requestOptions);
+          final response = await retryDio.request(
+            requestOptions.path,
+            data: requestOptions.data,
+            queryParameters: requestOptions.queryParameters,
+            options: Options(
+              method: requestOptions.method,
+            ),
+          );
           return handler.resolve(response);
-        } catch (_) {
-          // Si le rejeu échoue, on continue avec l'erreur originale
+        } catch (e) {
+          if (kDebugMode) {
+            print('Network: Échec du rejeu après rafraîchissement : $e');
+          }
         }
       } else {
-        // Si on ne peut pas obtenir de nouveau token, on peut forcer la déconnexion
+        if (kDebugMode) {
+          print('Network: Impossible de rafraîchir le token. Session expirée.');
+        }
+        // Déconnexion forcée si le rafraîchissement échoue (critère de sécurité)
         await _authRepository.signOut();
       }
     }
