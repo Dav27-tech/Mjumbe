@@ -72,6 +72,15 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<String?> getIdToken({bool forceRefresh = false}) async {
+    try {
+      return await firebaseAuth.currentUser?.getIdToken(forceRefresh);
+    } catch (e) {
+      return null;
+    }
+  }
+
   String _mapFirebaseErrorMessage(String code) {
     switch (code) {
       case 'user-not-found':
@@ -84,6 +93,12 @@ class AuthRepositoryImpl implements AuthRepository {
         return 'Adresse e-mail invalide.';
       case 'weak-password':
         return 'Le mot de passe doit contenir au moins 6 caractères.';
+      case 'operation-not-allowed':
+        return 'L\'authentification par e-mail n\'est pas activée dans la console Firebase.';
+      case 'too-many-requests':
+        return 'Trop de tentatives. Veuillez réessayer plus tard.';
+      case 'configuration-not-found':
+        return 'Erreur de configuration Firebase (CONFIGURATION_NOT_FOUND). Vérifiez l\'activation des services et les clés SHA.';
       default:
         return 'Erreur d\'authentification ($code).';
     }
