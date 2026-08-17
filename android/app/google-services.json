@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "556415567477",
+    "project_id": "mjumbe-fa818",
+    "storage_bucket": "mjumbe-fa818.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556415567477:android:bc5181ce2f829b7b5b9a3c",
+        "android_client_info": {
+          "package_name": "com.mjumbe.mjumbe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfM76C0iU4B-OqK6NB_HYSfgUpNtTXT0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
