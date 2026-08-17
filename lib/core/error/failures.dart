@@ -23,6 +23,10 @@ class NetworkFailure extends Failure {
   const NetworkFailure([super.message = 'Vérifiez votre connexion Internet.']);
 }
 
+class OfflineFailure extends Failure {
+  const OfflineFailure([super.message = 'Aucune donnée en cache disponible en mode hors-ligne.']);
+}
+
 class AuthFailure extends Failure {
   const AuthFailure(super.message);
 }
