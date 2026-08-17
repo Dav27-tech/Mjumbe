@@ -1,0 +1,7 @@
+- `[x]` Résoudre le flux vide NewsAPI
+- `[x]` Enrichir le README.md
+    - `[x]` Ajouter la description détaillée de la Clean Architecture
+    - `[x]` Détailler la stack technique et les raisons des choix
+    - `[x]` Documenter le processus d'installation sécurisé (.env + Firebase)
+    - `[x]` Expliquer le concept visuel Glassmorphism
+    - `[x]` Ajouter un guide de contribution et de lancement
