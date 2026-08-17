@@ -139,20 +139,35 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
 
           const SizedBox(height: 8.0),
 
+          // Bannière hors-ligne si nécessaire
+          BlocBuilder<NewsBloc, NewsState>(
+            builder: (context, state) {
+              if (state is NewsLoaded && state.infoMessage != null) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  color: Colors.amber.shade900.withOpacity(0.8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.wifi_off_rounded, size: 16, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          state.infoMessage!,
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+
           // 3. Fil d'actualités principal
           Expanded(
-            child: BlocConsumer<NewsBloc, NewsState>(
-              listener: (context, state) {
-                if (state is NewsLoaded && state.infoMessage != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.infoMessage!),
-                      backgroundColor: Colors.amber.shade900,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
-              },
+            child: BlocBuilder<NewsBloc, NewsState>(
               builder: (context, state) {
                 if (state is NewsLoading) {
                   return const Center(
