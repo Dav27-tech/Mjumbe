@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mjumbe/core/network/auth_interceptor.dart';
+import 'package:mjumbe/features/auth/domain/repositories/auth_repository.dart';
 
 class ApiClient {
   final Dio _dio;
 
   ApiClient({
     required String baseUrl,
-    required FirebaseAuth firebaseAuth,
+    required AuthRepository authRepository,
   }) : _dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -17,7 +17,7 @@ class ApiClient {
     ),
   ) {
     _dio.interceptors.addAll([
-      AuthInterceptor(firebaseAuth),
+      AuthInterceptor(authRepository),
       LogInterceptor(
         request: true,
         requestHeader: true,
