@@ -19,6 +19,7 @@ import 'package:mjumbe/features/news/presentation/bloc/news_bloc.dart';
 import 'package:mjumbe/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mjumbe/features/auth/domain/repositories/auth_repository_impl.dart';
 import 'package:mjumbe/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:mjumbe/app/router/app_router.dart';
 
 final sl = GetIt.instance;
 
@@ -106,5 +107,10 @@ Future<void> initDependencies() async {
 // Blocs
   sl.registerFactory<AuthBloc>(
         () => AuthBloc(authRepository: sl<AuthRepository>()),
+  );
+
+  // Router
+  sl.registerLazySingleton<AppRouter>(
+        () => AppRouter(sl<AuthBloc>()),
   );
 }
