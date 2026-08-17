@@ -1,7 +1,14 @@
-- `[x]` Résoudre le flux vide NewsAPI
-- `[x]` Enrichir le README.md
-    - `[x]` Ajouter la description détaillée de la Clean Architecture
-    - `[x]` Détailler la stack technique et les raisons des choix
-    - `[x]` Documenter le processus d'installation sécurisé (.env + Firebase)
-    - `[x]` Expliquer le concept visuel Glassmorphism
-    - `[x]` Ajouter un guide de contribution et de lancement
+- `[x]` Améliorer la gestion de l'Authentification (JWT)
+    - `[x]` Modifier `AuthRepository` pour inclure `getIdToken()`
+    - `[x]` Implémenter `getIdToken()` dans `AuthRepositoryImpl`
+- `[x]` Fiabiliser le mode hors-ligne et les erreurs
+    - `[x]` Modifier `failures.dart` pour des erreurs plus granulaires
+    - `[x]` Améliorer `NewsRepositoryImpl` pour un cache systématique
+    - `[x]` Améliorer l'UI de `NewsFeedPage` pour les erreurs réseau (Bannière Offline)
+- `[x]` Découplage Architectural
+    - `[x]` Refactoriser `main.dart` et `AppRouter` (Injection via GetIt)
+- `[x]` Infrastructure de Tests
+    - `[x]` Créer des mocks pour le Repository et les DataSources
+    - `[x]` Écrire des tests unitaires pour `NewsRepositoryImpl`
+    - `[x]` Écrire des tests de widgets pour `NewsFeedPage`
+- `[x]` Enrichir le `README.md` (Documentation complète)
