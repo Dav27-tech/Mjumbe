@@ -23,6 +23,6 @@ abstract class AuthRepository {
   /// Déconnexion
   Future<({Failure? failure, void data})> signOut();
 
-  /// Récupère le token JWT (IdToken) de l'utilisateur
-  Future<String?> getIdToken({bool forceRefresh = false});
+  /// Récupère le token d'accès OAuth2 (JWT IdToken) de l'utilisateur
+  Future<String?> getOAuth2AccessToken({bool forceRefresh = false});
 }

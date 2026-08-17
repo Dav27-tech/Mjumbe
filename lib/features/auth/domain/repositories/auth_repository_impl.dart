@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mjumbe/core/error/failures.dart';
 import 'package:mjumbe/features/auth/domain/entities/user_entity.dart';
 import 'package:mjumbe/features/auth/domain/repositories/auth_repository.dart';
@@ -73,10 +74,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<String?> getIdToken({bool forceRefresh = false}) async {
+  Future<String?> getOAuth2AccessToken({bool forceRefresh = false}) async {
     try {
+      // Firebase gère le cycle de vie OAuth2 / JWT de manière sécurisée
       return await firebaseAuth.currentUser?.getIdToken(forceRefresh);
     } catch (e) {
+      debugPrint("Erreur lors de la récupération du token OAuth2: $e");
       return null;
     }
   }
