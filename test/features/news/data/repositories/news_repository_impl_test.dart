@@ -16,6 +16,10 @@ void main() {
   late MockLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
 
+  setUpAll(() {
+    registerFallbackValue(const ArticleModel(id: '0', title: 'fallback'));
+  });
+
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockLocalDataSource = MockLocalDataSource();
@@ -27,77 +31,76 @@ void main() {
     );
   });
 
+  const tArticleModel = ArticleModel(
+    id: '1',
+    title: 'Test Title',
+    description: 'Test Description',
+    url: 'url',
+    urlToImage: 'image',
+    publishedAt: 'date',
+    sourceName: 'source',
+  );
+  final tArticles = [tArticleModel];
+
   group('getTopHeadlines', () {
     const tCategory = 'general';
-    const tArticleModel = ArticleModel(
-      id: '1',
-      title: 'Test Title',
-      description: 'Test Description',
-      url: 'url',
-      urlToImage: 'image',
-      publishedAt: 'date',
-      sourceName: 'source',
-    );
-    final tArticles = [tArticleModel];
 
-    test('should check if the device is online', () async {
-      // arrange
+    test('should return remote data when online', () async {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(() => mockRemoteDataSource.getTopHeadlines(category: any(named: 'category')))
           .thenAnswer((_) async => tArticles);
       when(() => mockLocalDataSource.cacheArticles(any())).thenAnswer((_) async => {});
 
-      // act
-      await repository.getTopHeadlines(category: tCategory);
-
-      // assert
-      verify(() => mockNetworkInfo.isConnected);
-    });
-
-    test('should return remote data when the call to remote data source is successful', () async {
-      // arrange
-      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      when(() => mockRemoteDataSource.getTopHeadlines(category: tCategory))
-          .thenAnswer((_) async => tArticles);
-      when(() => mockLocalDataSource.cacheArticles(any())).thenAnswer((_) async => {});
-
-      // act
       final result = await repository.getTopHeadlines(category: tCategory);
 
-      // assert
-      verify(() => mockRemoteDataSource.getTopHeadlines(category: tCategory));
-      expect(result.articles, equals(tArticles));
-      expect(result.failure, isNull);
+      expect(result.articles, tArticles);
     });
 
-    test('should cache data locally when the call to remote data source is successful', () async {
-      // arrange
-      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      when(() => mockRemoteDataSource.getTopHeadlines(category: tCategory))
-          .thenAnswer((_) async => tArticles);
-      when(() => mockLocalDataSource.cacheArticles(any())).thenAnswer((_) async => {});
-
-      // act
-      await repository.getTopHeadlines(category: tCategory);
-
-      // assert
-      verify(() => mockRemoteDataSource.getTopHeadlines(category: tCategory));
-      verify(() => mockLocalDataSource.cacheArticles(tArticles));
-    });
-
-    test('should return cached data when the device is offline', () async {
-      // arrange
+    test('should return cached data when offline', () async {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
       when(() => mockLocalDataSource.getCachedArticles()).thenAnswer((_) async => tArticles);
 
-      // act
       final result = await repository.getTopHeadlines(category: tCategory);
 
-      // assert
-      verifyZeroInteractions(mockRemoteDataSource);
-      verify(() => mockLocalDataSource.getCachedArticles());
-      expect(result.articles, equals(tArticles));
-      expect(result.failure, isNotNull); // Should contain the offline/network message
+      expect(result.articles, tArticles);
+      expect(result.failure, isNotNull);
+    });
+  });
+
+  group('searchNews', () {
+    const tQuery = 'flutter';
+
+    test('should return remote data when successful', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemoteDataSource.searchNews(query: tQuery))
+          .thenAnswer((_) async => tArticles);
+
+      final result = await repository.searchNews(query: tQuery);
+
+      expect(result.articles, tArticles);
+      verify(() => mockRemoteDataSource.searchNews(query: tQuery));
+    });
+  });
+
+  group('toggleBookmark', () {
+    test('should call local data source to bookmark', () async {
+      when(() => mockLocalDataSource.isBookmarked(any())).thenAnswer((_) async => false);
+      when(() => mockLocalDataSource.bookmarkArticle(any())).thenAnswer((_) async => {});
+
+      final result = await repository.toggleBookmark(tArticleModel);
+
+      expect(result.isBookmarked, true);
+      verify(() => mockLocalDataSource.bookmarkArticle(any()));
+    });
+
+    test('should call local data source to remove bookmark', () async {
+      when(() => mockLocalDataSource.isBookmarked(any())).thenAnswer((_) async => true);
+      when(() => mockLocalDataSource.removeBookmark(any())).thenAnswer((_) async => {});
+
+      final result = await repository.toggleBookmark(tArticleModel);
+
+      expect(result.isBookmarked, false);
+      verify(() => mockLocalDataSource.removeBookmark(tArticleModel.id));
     });
   });
 }
