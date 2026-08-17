@@ -130,7 +130,8 @@ class NewsRepositoryImpl implements NewsRepository {
     try {
       final cachedModels = await localDataSource.getCachedArticles();
       if (cachedModels.isNotEmpty) {
-        return (failure: null, articles: cachedModels);
+        // On retourne les articles ET l'erreur originale pour informer l'utilisateur
+        return (failure: originalFailure, articles: cachedModels);
       } else {
         return (failure: originalFailure, articles: null);
       }
