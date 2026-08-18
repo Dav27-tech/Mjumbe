@@ -24,6 +24,10 @@ import 'package:mjumbe/app/router/app_router.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
+      // Guard: avoid double initialization (e.g., if `main()` is called again).
+      if (sl.isRegistered<InternetConnectionChecker>()) {
+            return;
+      }
   // ---------------------------------------------------------------------------
   // 1. External & Core
   // ---------------------------------------------------------------------------
