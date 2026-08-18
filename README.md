@@ -273,8 +273,16 @@ flutter pub get
 Créer `.env` à la racine :
 
 ```env
-NEWS_API_KEY=votre_cle
+# Clé publique pour NewsAPI (obtenez-la sur https://newsapi.org)
+NEWS_API_KEY=VOTRE_NEWS_API_KEY
 NEWS_API_BASE_URL=https://newsapi.org/v2
+
+# Optionnel: activez ce paramètre si vous utilisez un backend intermédiaire
+# BACKEND_BASE_URL=https://api.votre-backend.com
+
+# Firebase configuration (les valeurs sont injectées via google-services.json / plist)
+# Vous n'avez normalement pas besoin de placer d'autres variables ici pour Firebase,
+# mais conservez .env pour des clés tierces ou des flags d'environnement.
 ```
 
 Ajouter `.env` au `.gitignore`.
@@ -288,6 +296,36 @@ android/app/google-services.json
 ```
 
 Puis activer **Email/Password** dans Firebase Authentication.
+
+Étapes détaillées pour Firebase (Android/iOS):
+
+- Créez un projet Firebase sur https://console.firebase.google.com
+- Ajoutez une application Android/iOS et suivez l'assistant pour générer `google-services.json` (Android)
+      et `GoogleService-Info.plist` (iOS).
+- Téléchargez le fichier et placez-le respectivement dans `android/app/` ou `ios/Runner/`.
+- Dans la console Firebase → Authentication → Méthode de connexion, activez "Email/Password".
+
+Remarque: Le projet lit d'autres variables via `.env` (par exemple `NEWS_API_KEY`). Ne commitez jamais `.env` ni
+les fichiers de configuration Firebase contenant des identifiants secrets.
+
+### Configuration Firebase pour le Web
+
+Lorsque vous compilez pour le web, `firebase_core` requiert des `FirebaseOptions` explicites. Vous pouvez fournir
+ces options via le fichier `.env` (chargé au démarrage). Ajoutez ces variables à la racine du projet :
+
+```env
+FIREBASE_API_KEY=VOTRE_FIREBASE_API_KEY
+FIREBASE_APP_ID=VOTRE_FIREBASE_APP_ID
+FIREBASE_MESSAGING_SENDER_ID=VOTRE_SENDER_ID
+FIREBASE_PROJECT_ID=VOTRE_PROJECT_ID
+# optionnels
+FIREBASE_AUTH_DOMAIN=VOTRE_AUTH_DOMAIN
+FIREBASE_STORAGE_BUCKET=VOTRE_STORAGE_BUCKET
+FIREBASE_MEASUREMENT_ID=VOTRE_MEASUREMENT_ID
+```
+
+Si ces variables ne sont pas définies, l'application affichera un écran d'erreur au démarrage avec une indication
+claire pour ajouter les valeurs manquantes.
 
 ### 5. Générer les fichiers
 
