@@ -65,10 +65,11 @@ void main() {
       when(() => mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
 
       // act
-      await repository.signOut();
+      final result = await repository.signOut();
 
       // assert
       verify(() => mockFirebaseAuth.signOut()).called(1);
+      expect(result.failure, isNull);
     });
 
     test('getOAuth2AccessToken should return token from currentUser', () async {
@@ -82,6 +83,16 @@ void main() {
       // assert
       expect(result, 'fake-token');
       verify(() => mockUser.getIdToken(false)).called(1);
+    });
+
+    test('getOAuth2AccessToken with forceRefresh should request fresh token', () async {
+      when(() => mockUser.getIdToken(true)).thenAnswer((_) async => 'fresh-token');
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+
+      final result = await repository.getOAuth2AccessToken(forceRefresh: true);
+
+      expect(result, 'fresh-token');
+      verify(() => mockUser.getIdToken(true)).called(1);
     });
   });
 }
