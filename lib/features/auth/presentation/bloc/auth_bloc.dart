@@ -80,7 +80,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       Emitter<AuthState> emit,
       ) async {
     emit(AuthLoading());
-    await authRepository.signOut();
+    final result = await authRepository.signOut();
+
+    if (result.failure != null) {
+      emit(AuthFailureState(result.failure!.message));
+    } else {
+      // Ensure UI reflects logged out state immediately
+      emit(UnauthenticatedState());
+    }
   }
 
   @override
