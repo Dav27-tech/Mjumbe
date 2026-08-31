@@ -4,7 +4,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:mjumbe/features/auth/domain/repositories/auth_repository_impl.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockUser extends Mock implements User {}
+
 class MockUserCredential extends Mock implements UserCredential {}
 
 void main() {
@@ -35,7 +37,8 @@ void main() {
           )).thenAnswer((_) async => mockUserCredential);
 
       // act
-      final result = await repository.signIn(email: tEmail, password: tPassword);
+      final result =
+          await repository.signIn(email: tEmail, password: tPassword);
 
       // assert
       expect(result.user?.email, tEmail);
@@ -53,7 +56,8 @@ void main() {
           )).thenAnswer((_) async => mockUserCredential);
 
       // act
-      final result = await repository.signUp(email: tEmail, password: tPassword);
+      final result =
+          await repository.signUp(email: tEmail, password: tPassword);
 
       // assert
       expect(result.user?.uid, '123');
@@ -74,7 +78,8 @@ void main() {
 
     test('getOAuth2AccessToken should return token from currentUser', () async {
       // arrange
-      when(() => mockUser.getIdToken(any())).thenAnswer((_) async => 'fake-token');
+      when(() => mockUser.getIdToken(any()))
+          .thenAnswer((_) async => 'fake-token');
       when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
 
       // act
@@ -85,8 +90,10 @@ void main() {
       verify(() => mockUser.getIdToken(false)).called(1);
     });
 
-    test('getOAuth2AccessToken with forceRefresh should request fresh token', () async {
-      when(() => mockUser.getIdToken(true)).thenAnswer((_) async => 'fresh-token');
+    test('getOAuth2AccessToken with forceRefresh should request fresh token',
+        () async {
+      when(() => mockUser.getIdToken(true))
+          .thenAnswer((_) async => 'fresh-token');
       when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
 
       final result = await repository.getOAuth2AccessToken(forceRefresh: true);
