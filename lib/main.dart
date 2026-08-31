@@ -9,24 +9,22 @@ import 'package:mjumbe/features/news/presentation/bloc/news_bloc.dart';
 import 'package:mjumbe/injection_container.dart' as di;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mjumbe/core/utils/connectivity_cubit.dart';
 import 'package:mjumbe/core/widgets/offline_banner.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   String? initError;
   String? initStackTrace;
 
   try {
-    // 1. Charger le fichier .env (doit être disponible avant l'initialisation Firebase sur le web)
+    // 1. Charger le fichier .env
     await dotenv.load(fileName: ".env");
 
     // 2. Initialiser Firebase
     if (kIsWeb) {
-      // For web, FirebaseOptions must be provided. Prefer loading from .env.
       final apiKey = dotenv.env['FIREBASE_API_KEY'];
       final appId = dotenv.env['FIREBASE_APP_ID'];
       final messagingSenderId = dotenv.env['FIREBASE_MESSAGING_SENDER_ID'];
@@ -35,8 +33,8 @@ void main() async {
       final storageBucket = dotenv.env['FIREBASE_STORAGE_BUCKET'];
       final measurementId = dotenv.env['FIREBASE_MEASUREMENT_ID'];
 
-      if (apiKey == null || apiKey.isEmpty || appId == null || appId.isEmpty || messagingSenderId == null || messagingSenderId.isEmpty || projectId == null || projectId.isEmpty) {
-        throw Exception('Firebase Web configuration missing. Ensure FIREBASE_API_KEY, FIREBASE_APP_ID, FIREBASE_MESSAGING_SENDER_ID and FIREBASE_PROJECT_ID are set in .env for web.');
+      if (apiKey == null || appId == null || messagingSenderId == null || projectId == null) {
+        throw Exception('Configuration Firebase Web manquante dans le fichier .env');
       }
 
       await Firebase.initializeApp(
@@ -58,12 +56,11 @@ void main() async {
     await di.initDependencies();
   } catch (e, stackTrace) {
     debugPrint("Erreur critique lors de l'initialisation : $e");
-    debugPrint(stackTrace.toString());
     initError = e.toString();
     initStackTrace = stackTrace.toString();
   }
-  
-  runApp(MyApp(error: initError));
+
+  runApp(MyApp(error: initError, stackTrace: initStackTrace));
 }
 
 class MyApp extends StatefulWidget {
@@ -98,11 +95,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Si une erreur d'initialisation est survenue, on affiche un écran d'erreur au lieu de l'app
     if (widget.error != null || _authBloc == null) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
+        theme: AppTheme.lightTheme,
         home: Scaffold(
           body: Center(
             child: Padding(
@@ -114,20 +110,21 @@ class _MyAppState extends State<MyApp> {
                   const SizedBox(height: 16),
                   const Text(
                     "Erreur de démarrage",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryNeutral),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     widget.error ?? "Le service d'authentification n'a pas pu être initialisé.",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white70),
+                    style: const TextStyle(color: AppTheme.secondaryNeutral),
                   ),
-                  const SizedBox(height: 12),
-                  if (widget.stackTrace != null)
-                    _ErrorDetails(stackTrace: widget.stackTrace!),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => main(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryNeutral,
+                      foregroundColor: Colors.white,
+                    ),
                     child: const Text("Réessayer"),
                   ),
                 ],
@@ -147,43 +144,12 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<NewsBloc>(create: (_) => di.sl<NewsBloc>()),
       ],
       child: MaterialApp.router(
-        title: 'Mjumbe App',
+        title: 'LUMA NEWS',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
+        theme: AppTheme.lightTheme,
         routerConfig: di.sl<AppRouter>().router,
         builder: (context, child) => OfflineBanner(child: child ?? const SizedBox.shrink()),
       ),
-    );
-  }
-}
-
-class _ErrorDetails extends StatefulWidget {
-  final String stackTrace;
-  const _ErrorDetails({required this.stackTrace});
-
-  @override
-  State<_ErrorDetails> createState() => _ErrorDetailsState();
-}
-
-class _ErrorDetailsState extends State<_ErrorDetails> {
-  bool _expanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextButton(
-          onPressed: () => setState(() => _expanded = !_expanded),
-          child: Text(_expanded ? 'Masquer les détails' : 'Afficher les détails'),
-        ),
-        if (_expanded)
-          SizedBox(
-            height: 200,
-            child: SingleChildScrollView(
-              child: SelectableText(widget.stackTrace, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-            ),
-          ),
-      ],
     );
   }
 }
