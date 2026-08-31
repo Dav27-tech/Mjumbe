@@ -24,10 +24,10 @@ import 'package:mjumbe/app/router/app_router.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-      // Guard: avoid double initialization (e.g., if `main()` is called again).
-      if (sl.isRegistered<InternetConnectionChecker>()) {
-            return;
-      }
+  // Guard: avoid double initialization (e.g., if `main()` is called again).
+  if (sl.isRegistered<InternetConnectionChecker>()) {
+    return;
+  }
   // ---------------------------------------------------------------------------
   // 1. External & Core
   // ---------------------------------------------------------------------------
@@ -35,25 +35,25 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<InternetConnectionChecker>(
-        () => InternetConnectionChecker(),
+    () => InternetConnectionChecker(),
   );
 
   sl.registerLazySingleton<NetworkInfo>(
-        () => NetworkInfoImpl(sl<InternetConnectionChecker>()),
+    () => NetworkInfoImpl(sl<InternetConnectionChecker>()),
   );
 
   // ---------------------------------------------------------------------------
   // 2. Auth Domain & Data (Requis pour l'intercepteur réseau)
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<AuthRepository>(
-        () => AuthRepositoryImpl(firebaseAuth: sl<FirebaseAuth>()),
+    () => AuthRepositoryImpl(firebaseAuth: sl<FirebaseAuth>()),
   );
 
   // ---------------------------------------------------------------------------
   // 3. Network Infrastructure
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<ApiClient>(
-        () => ApiClient(
+    () => ApiClient(
       baseUrl: 'https://newsapi.org',
       authRepository: sl<AuthRepository>(),
     ),
@@ -63,14 +63,14 @@ Future<void> initDependencies() async {
   // 4. News Data Sources
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<NewsRemoteDataSource>(
-        () => NewsRemoteDataSourceImpl(
+    () => NewsRemoteDataSourceImpl(
       dio: sl<ApiClient>().client,
       apiKey: AppConstants.newsApiKey,
     ),
   );
 
   sl.registerLazySingleton<NewsLocalDataSource>(
-        () => NewsLocalDataSourceImpl(
+    () => NewsLocalDataSourceImpl(
       cachedArticlesBox: HiveService.cachedArticlesBox,
       bookmarkedArticlesBox: HiveService.bookmarkedArticlesBox,
     ),
@@ -80,7 +80,7 @@ Future<void> initDependencies() async {
   // 5. Repositories (Domain Layer)
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<NewsRepository>(
-        () => NewsRepositoryImpl(
+    () => NewsRepositoryImpl(
       remoteDataSource: sl<NewsRemoteDataSource>(),
       localDataSource: sl<NewsLocalDataSource>(),
       networkInfo: sl<NetworkInfo>(),
@@ -91,34 +91,34 @@ Future<void> initDependencies() async {
   // 6. Use Cases
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<GetTopHeadlines>(
-        () => GetTopHeadlines(sl<NewsRepository>()),
+    () => GetTopHeadlines(sl<NewsRepository>()),
   );
   sl.registerLazySingleton<SearchNews>(
-        () => SearchNews(sl<NewsRepository>()),
+    () => SearchNews(sl<NewsRepository>()),
   );
   sl.registerLazySingleton<ToggleBookmark>(
-        () => ToggleBookmark(sl<NewsRepository>()),
+    () => ToggleBookmark(sl<NewsRepository>()),
   );
 
   // ---------------------------------------------------------------------------
   // 7. Blocs / State Management
   // ---------------------------------------------------------------------------
   sl.registerFactory<NewsBloc>(
-     () => NewsBloc(
-       getTopHeadlines: sl<GetTopHeadlines>(),
-       searchNews: sl<SearchNews>(),
-       toggleBookmark: sl<ToggleBookmark>(),
-     ),
+    () => NewsBloc(
+      getTopHeadlines: sl<GetTopHeadlines>(),
+      searchNews: sl<SearchNews>(),
+      toggleBookmark: sl<ToggleBookmark>(),
+    ),
   );
 
   sl.registerFactory<AuthBloc>(
-        () => AuthBloc(authRepository: sl<AuthRepository>()),
+    () => AuthBloc(authRepository: sl<AuthRepository>()),
   );
 
   // ---------------------------------------------------------------------------
   // 8. Navigation
   // ---------------------------------------------------------------------------
   sl.registerLazySingleton<AppRouter>(
-        () => AppRouter(sl<AuthBloc>()),
+    () => AppRouter(sl<AuthBloc>()),
   );
 }
