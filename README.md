@@ -1,6 +1,6 @@
-# 📰 Mjumbe — L'actualité réinventée
+# LUMA NEWS — L'actualité réinventée
 
-**Mjumbe** (_« Messager » en Swahili_) est une application mobile d'agrégation d'actualités développée avec **Flutter**.
+**LUMA NEWS** est une application mobile d'agrégation d'actualités développée avec **Flutter**.
 
 Elle permet de consulter, rechercher et sauvegarder des actualités avec une interface **Dark Glassmorphic**, un système d'authentification et un fonctionnement partiel **hors-ligne**.
 
@@ -301,7 +301,7 @@ Puis activer **Email/Password** dans Firebase Authentication.
 
 - Créez un projet Firebase sur https://console.firebase.google.com
 - Ajoutez une application Android/iOS et suivez l'assistant pour générer `google-services.json` (Android)
-      et `GoogleService-Info.plist` (iOS).
+  et `GoogleService-Info.plist` (iOS).
 - Téléchargez le fichier et placez-le respectivement dans `android/app/` ou `ios/Runner/`.
 - Dans la console Firebase → Authentication → Méthode de connexion, activez "Email/Password".
 
@@ -396,8 +396,8 @@ Les clés ne doivent pas être écrites directement dans le code.
 
 ---
 
-## 👨‍💻 Auteur
+## Auteur
 
 **DavSoft**
 
-> _Mjumbe — L'actualité réinventée._ 📰
+> _LUMA NEWS — L'actualité simplifiée._
