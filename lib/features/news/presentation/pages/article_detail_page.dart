@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mjumbe/app/theme/app_theme.dart';
 import 'package:mjumbe/features/news/domain/entities/article_entity.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_bloc.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_event.dart';
@@ -18,21 +19,22 @@ class ArticleDetailPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: AppTheme.backgroundLight,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: AppTheme.backgroundLight,
+            leading: const BackButton(color: AppTheme.primaryNeutral),
             actions: [
               IconButton(
-                icon: const Icon(Icons.bookmark_border_rounded),
+                icon: const Icon(Icons.bookmark_border_rounded, color: AppTheme.primaryNeutral),
                 onPressed: () {
                   context.read<NewsBloc>().add(ToggleBookmarkEvent(article));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Action sur le signet enregistrée'),
+                      content: Text('Action sur le signet effectuée'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -44,84 +46,72 @@ class ArticleDetailPage extends StatelessWidget {
                   ? CachedNetworkImage(
                 imageUrl: article.urlToImage!,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: theme.colorScheme.surface,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                placeholder: (context, url) => Container(color: Colors.grey.shade100),
                 errorWidget: (context, url, error) => Container(
-                  color: theme.colorScheme.surface,
-                  child: const Icon(Icons.broken_image, size: 50),
+                  color: Colors.grey.shade100,
+                  child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                 ),
               )
                   : Container(
-                color: theme.colorScheme.surface,
-                child: const Icon(Icons.newspaper, size: 80),
+                color: Colors.grey.shade100,
+                child: const Icon(Icons.newspaper, size: 80, color: Colors.grey),
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (article.sourceName != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.5),
-                        ),
-                      ),
-                      child: Text(
-                        article.sourceName!,
-                        style: TextStyle(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                    Text(
+                      article.sourceName!.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppTheme.secondaryNeutral,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                        letterSpacing: 1.2,
                       ),
                     ),
                   const SizedBox(height: 12),
                   Text(
                     article.title,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.primaryNeutral,
+                      height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   if (article.publishedAt != null)
                     Text(
                       article.publishedAt!,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontSize: 12,
+                      style: const TextStyle(
+                        color: AppTheme.secondaryNeutral,
+                        fontSize: 13,
                       ),
                     ),
-                  const SizedBox(height: 20),
-                  const Divider(color: Colors.white10),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 32),
+                  const Divider(height: 1, color: AppTheme.borderLight),
+                  const SizedBox(height: 32),
                   Text(
-                    article.description ?? 'Aucune description disponible.',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 16,
+                    article.description ?? '',
+                    style: const TextStyle(
+                      color: AppTheme.primaryNeutral,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   Text(
                     article.content ?? '',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                      height: 1.6,
+                    style: const TextStyle(
+                      color: AppTheme.secondaryNeutral,
+                      fontSize: 16,
+                      height: 1.7,
                     ),
                   ),
                 ],
