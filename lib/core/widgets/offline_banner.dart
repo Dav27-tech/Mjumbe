@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mjumbe/app/theme/app_theme.dart';
 import 'package:mjumbe/core/utils/connectivity_cubit.dart';
 
 class OfflineBanner extends StatelessWidget {
@@ -14,17 +15,23 @@ class OfflineBanner extends StatelessWidget {
           children: [
             child,
             if (!isOnline)
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topCenter,
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Material(
                   child: Container(
-                    width: double.infinity,
-                    color: Colors.orangeAccent.withOpacity(0.95),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                    color: AppTheme.primaryNeutral,
                     child: const Text(
-                      'Vous êtes hors-ligne — certaines fonctionnalités sont limitées.',
+                      'MODE HORS-LIGNE ACTIVÉ',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
                     ),
                   ),
                 ),
