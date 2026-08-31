@@ -19,7 +19,8 @@ void main() {
     // arrange: simulate refresh failing
     when(() => mockAuthRepository.getOAuth2AccessToken(forceRefresh: true))
         .thenAnswer((_) async => null);
-    when(() => mockAuthRepository.signOut()).thenAnswer((_) async => (failure: null, data: null));
+    when(() => mockAuthRepository.signOut())
+        .thenAnswer((_) async => (failure: null, data: null));
 
     final options = RequestOptions(path: '/test');
     final response = Response(requestOptions: options, statusCode: 401);
@@ -31,7 +32,8 @@ void main() {
     await interceptor.onError(dioError, handler);
 
     // assert
-    verify(() => mockAuthRepository.getOAuth2AccessToken(forceRefresh: true)).called(1);
+    verify(() => mockAuthRepository.getOAuth2AccessToken(forceRefresh: true))
+        .called(1);
     verify(() => mockAuthRepository.signOut()).called(1);
   });
 }
