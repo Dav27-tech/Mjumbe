@@ -1,52 +1,70 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primaryAccent = Color(0xFF6C5CE7); // Violet Néon
-  static const Color secondaryAccent = Color(0xFF00CEC9); // Cyan
-  static const Color darkBackground = Color(0xFF0F0F1E); // Bleu Nuit Profond
-  static const Color surfaceDark = Color(0xFF1E1E2C); // Couleur Carte
-  static const Color textPrimary = Color(0xFFF5F6FA);
-  static const Color textSecondary = Color(0xFFA4B0BE);
+  static const Color primaryNeutral = Color(0xFF1A1A1A); // Noir profond
+  static const Color secondaryNeutral = Color(0xFF757575); // Gris neutre
+  static const Color backgroundLight = Color(0xFFFDFDFD); // Fond très clair
+  static const Color surfaceLight = Color(0xFFFFFFFF); // Blanc pur
+  static const Color borderLight = Color(0xFFEEEEEE); // Bordure légère
 
-  static ThemeData get darkTheme {
+  static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      colorScheme: const ColorScheme.dark(
-        primary: primaryAccent,
-        secondary: secondaryAccent,
-        surface: surfaceDark,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: backgroundLight,
+      colorScheme: const ColorScheme.light(
+        primary: primaryNeutral,
+        secondary: secondaryNeutral,
+        surface: surfaceLight,
+        onSurface: primaryNeutral,
+        onPrimary: surfaceLight,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: darkBackground,
+        backgroundColor: backgroundLight,
         elevation: 0,
         centerTitle: false,
+        iconTheme: IconThemeData(color: primaryNeutral),
         titleTextStyle: TextStyle(
-          color: textPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+          color: primaryNeutral,
+          fontSize: 22,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.0,
         ),
       ),
       cardTheme: CardThemeData(
-        color: surfaceDark,
-        elevation: 4,
+        color: surfaceLight,
+        elevation: 2,
+        shadowColor: Colors.black12,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: borderLight),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceDark,
-        hintStyle: const TextStyle(color: textSecondary),
+        fillColor: Colors.grey.shade50,
+        hintStyle: const TextStyle(color: secondaryNeutral, fontSize: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: borderLight),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: borderLight),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryAccent, width: 1.5),
+          borderSide: const BorderSide(color: primaryNeutral, width: 1.5),
         ),
+      ),
+      textTheme: const TextTheme(
+        headlineSmall: TextStyle(
+          color: primaryNeutral,
+          fontWeight: FontWeight.bold,
+        ),
+        bodyLarge: TextStyle(color: primaryNeutral),
+        bodyMedium: TextStyle(color: secondaryNeutral),
       ),
     );
   }
