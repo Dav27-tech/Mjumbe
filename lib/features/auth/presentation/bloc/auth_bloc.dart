@@ -34,9 +34,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onAuthCheckRequested(
-      AuthCheckRequestedEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+    AuthCheckRequestedEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     final user = authRepository.currentUser;
     if (user != null) {
       emit(AuthenticatedState(user));
@@ -46,9 +46,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onSignIn(
-      AuthSignInEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+    AuthSignInEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     final result = await authRepository.signIn(
       email: event.email,
@@ -61,9 +61,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onSignUp(
-      AuthSignUpEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+    AuthSignUpEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     final result = await authRepository.signUp(
       email: event.email,
@@ -76,9 +76,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onSignOut(
-      AuthSignOutEvent event,
-      Emitter<AuthState> emit,
-      ) async {
+    AuthSignOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     final result = await authRepository.signOut();
 
