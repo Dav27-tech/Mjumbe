@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mjumbe/app/theme/app_theme.dart';
 
 class MainShellPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -19,50 +19,41 @@ class MainShellPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface.withOpacity(0.65),
-              border: Border(
-                top: BorderSide(
-                  color: Colors.white.withOpacity(0.1),
-                ),
-              ),
-            ),
-            child: BottomNavigationBar(
-              currentIndex: navigationShell.currentIndex,
-              onTap: _onTap,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              selectedItemColor: theme.colorScheme.primary,
-              unselectedItemColor: Colors.white54,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.newspaper_outlined),
-                  activeIcon: Icon(Icons.newspaper_rounded),
-                  label: 'Actualités',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.bookmark_outline_rounded),
-                  activeIcon: Icon(Icons.bookmark_rounded),
-                  label: 'Signets',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  activeIcon: Icon(Icons.person_rounded),
-                  label: 'Profil',
-                ),
-              ],
-            ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(color: AppTheme.borderLight, width: 1),
           ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: navigationShell.currentIndex,
+          onTap: _onTap,
+          backgroundColor: AppTheme.surfaceLight,
+          elevation: 0,
+          selectedItemColor: AppTheme.primaryNeutral,
+          unselectedItemColor: AppTheme.secondaryNeutral,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 11),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 11),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore_outlined, size: 22),
+              activeIcon: Icon(Icons.explore_rounded, size: 22),
+              label: 'EXPLORER',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bookmarks_outlined, size: 22),
+              activeIcon: Icon(Icons.bookmarks_rounded, size: 22),
+              label: 'SIGNETS',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined, size: 22),
+              activeIcon: Icon(Icons.account_circle_rounded, size: 22),
+              label: 'PROFIL',
+            ),
+          ],
         ),
       ),
     );
