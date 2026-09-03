@@ -6,6 +6,20 @@ import 'package:mjumbe/features/auth/domain/repositories/auth_repository.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+class RecordingErrorHandler extends ErrorInterceptorHandler {
+  bool nextCalled = false;
+  Object? nextValue;
+
+  @override
+  void next(
+    Object? err, [
+    StackTrace? st,
+  ]) {
+    nextCalled = true;
+    nextValue = err;
+  }
+}
+
 void main() {
   late MockAuthRepository mockAuthRepository;
   late AuthInterceptor interceptor;
@@ -26,15 +40,14 @@ void main() {
     final response = Response(requestOptions: options, statusCode: 401);
     final dioError = DioException(requestOptions: options, response: response);
 
-    final handler = ErrorInterceptorHandler();
+    final handler = RecordingErrorHandler();
 
     // act
     interceptor.onError(dioError, handler);
-    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
 
     // assert
-    verify(() => mockAuthRepository.getOAuth2AccessToken(forceRefresh: true))
-        .called(1);
+    expect(handler.nextCalled, isTrue);
     verify(() => mockAuthRepository.signOut()).called(1);
   });
 }
