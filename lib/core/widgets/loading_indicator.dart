@@ -14,7 +14,7 @@ class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     final widget = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
