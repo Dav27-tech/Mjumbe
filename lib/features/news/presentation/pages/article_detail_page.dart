@@ -5,6 +5,7 @@ import 'package:mjumbe/app/theme/app_theme.dart';
 import 'package:mjumbe/features/news/domain/entities/article_entity.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_bloc.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_event.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleDetailPage extends StatelessWidget {
   final ArticleEntity article;
@@ -13,6 +14,25 @@ class ArticleDetailPage extends StatelessWidget {
     super.key,
     required this.article,
   });
+
+  Future<void> _openOriginalArticle(BuildContext context) async {
+    final url = article.url;
+    if (url == null || url.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Aucun lien disponible pour cet article.')),
+      );
+      return;
+    }
+
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Impossible d’ouvrir le lien de l’article.')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +46,11 @@ class ArticleDetailPage extends StatelessWidget {
             backgroundColor: AppTheme.backgroundLight,
             leading: const BackButton(color: AppTheme.primaryNeutral),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.open_in_new_rounded, color: AppTheme.primaryNeutral),
+                tooltip: 'Ouvrir l’article original',
+                onPressed: () => _openOriginalArticle(context),
+              ),
               IconButton(
                 icon: const Icon(Icons.bookmark_border_rounded, color: AppTheme.primaryNeutral),
                 onPressed: () {
@@ -112,6 +137,24 @@ class ArticleDetailPage extends StatelessWidget {
                       height: 1.7,
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  if (article.url != null && article.url!.isNotEmpty)
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton.icon(
+                        onPressed: () => _openOriginalArticle(context),
+                        icon: const Icon(Icons.open_in_new_rounded),
+                        label: const Text('Ouvrir l’article original'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppTheme.primaryNeutral,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: const BorderSide(color: AppTheme.borderLight),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

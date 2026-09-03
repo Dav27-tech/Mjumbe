@@ -24,7 +24,7 @@ class LoadingIndicator extends StatelessWidget {
           Text(
             message!,
             style: TextStyle(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -42,10 +42,10 @@ class LoadingIndicator extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface.withOpacity(0.7),
+              color: theme.colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             child: widget,

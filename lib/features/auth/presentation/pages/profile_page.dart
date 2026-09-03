@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -81,7 +81,32 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 32),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.borderLight),
+                    ),
+                    child: Column(
+                      children: const [
+                        ListTile(
+                          leading: Icon(Icons.language_rounded, color: AppTheme.primaryNeutral),
+                          title: Text('Langue', style: TextStyle(color: AppTheme.primaryNeutral)),
+                          trailing: Text('Français', style: TextStyle(color: AppTheme.secondaryNeutral)),
+                        ),
+                        Divider(height: 1, color: AppTheme.borderLight),
+                        ListTile(
+                          leading: Icon(Icons.tune_rounded, color: AppTheme.primaryNeutral),
+                          title: Text('Préférences', style: TextStyle(color: AppTheme.primaryNeutral)),
+                          trailing: Icon(Icons.chevron_right_rounded, color: AppTheme.secondaryNeutral),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
                     child: TextButton.icon(
@@ -101,7 +126,7 @@ class ProfilePage extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: Colors.redAccent.withOpacity(0.2)),
+                          side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.2)),
                         ),
                       ),
                     ),
