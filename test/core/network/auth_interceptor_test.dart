@@ -29,7 +29,8 @@ void main() {
     final handler = ErrorInterceptorHandler();
 
     // act
-    await interceptor.onError(dioError, handler);
+    interceptor.onError(dioError, handler);
+    await Future<void>.delayed(Duration.zero);
 
     // assert
     verify(() => mockAuthRepository.getOAuth2AccessToken(forceRefresh: true))
