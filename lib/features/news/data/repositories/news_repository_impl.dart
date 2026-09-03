@@ -106,6 +106,8 @@ class NewsRepositoryImpl implements NewsRepository {
       }
     } on CacheException catch (e) {
       return (failure: CacheFailure(e.message), isBookmarked: null);
+    } catch (e) {
+      return (failure: CacheFailure('Erreur lors de la gestion du signet: ${e.toString()}'), isBookmarked: null);
     }
   }
 
