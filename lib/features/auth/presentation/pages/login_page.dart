@@ -36,20 +36,18 @@ class _LoginPageState extends State<LoginPage> {
 
       if (_isSignUp) {
         context.read<AuthBloc>().add(
-          AuthSignUpEvent(email: email, password: password),
-        );
+              AuthSignUpEvent(email: email, password: password),
+            );
       } else {
         context.read<AuthBloc>().add(
-          AuthSignInEvent(email: email, password: password),
-        );
+              AuthSignInEvent(email: email, password: password),
+            );
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       body: BlocListener<AuthBloc, AuthState>(
@@ -121,7 +119,10 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: 'Adresse e-mail',
                             icon: Icons.email_outlined,
                           ),
-                          validator: (value) => (value == null || !value.contains('@')) ? 'E-mail invalide' : null,
+                          validator: (value) =>
+                              (value == null || !value.contains('@'))
+                                  ? 'E-mail invalide'
+                                  : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -132,14 +133,20 @@ class _LoginPageState extends State<LoginPage> {
                             icon: Icons.lock_outline_rounded,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                _obscurePassword
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
                                 size: 20,
                                 color: AppTheme.secondaryNeutral,
                               ),
-                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                              onPressed: () => setState(
+                                  () => _obscurePassword = !_obscurePassword),
                             ),
                           ),
-                          validator: (value) => (value == null || value.length < 6) ? '6 caractères min.' : null,
+                          validator: (value) =>
+                              (value == null || value.length < 6)
+                                  ? '6 caractères min.'
+                                  : null,
                         ),
                         if (_isSignUp) ...[
                           const SizedBox(height: 16),
@@ -150,7 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Confirmer le mot de passe',
                               icon: Icons.lock_reset_rounded,
                             ),
-                            validator: (value) => (_isSignUp && value != _passwordController.text) ? 'Non identique' : null,
+                            validator: (value) =>
+                                (_isSignUp && value != _passwordController.text)
+                                    ? 'Non identique'
+                                    : null,
                           ),
                         ],
                         const SizedBox(height: 32),
@@ -162,13 +172,24 @@ class _LoginPageState extends State<LoginPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.primaryNeutral,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
                                 elevation: 0,
                               ),
                               child: isLoading
-                                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                                  : Text(_isSignUp ? 'S\'INSCRIRE' : 'SE CONNECTER', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2, color: Colors.white))
+                                  : Text(
+                                      _isSignUp
+                                          ? 'S\'INSCRIRE'
+                                          : 'SE CONNECTER',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
                             );
                           },
                         ),
@@ -183,8 +204,12 @@ class _LoginPageState extends State<LoginPage> {
                     _formKey.currentState?.reset();
                   }),
                   child: Text(
-                    _isSignUp ? 'Déjà un compte ? Se connecter' : 'Pas de compte ? S\'inscrire',
-                    style: const TextStyle(color: AppTheme.secondaryNeutral, fontWeight: FontWeight.w600),
+                    _isSignUp
+                        ? 'Déjà un compte ? Se connecter'
+                        : 'Pas de compte ? S\'inscrire',
+                    style: const TextStyle(
+                        color: AppTheme.secondaryNeutral,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -195,7 +220,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  InputDecoration _buildInputDecoration({required String hintText, required IconData icon, Widget? suffixIcon}) {
+  InputDecoration _buildInputDecoration(
+      {required String hintText, required IconData icon, Widget? suffixIcon}) {
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(icon, size: 20, color: AppTheme.secondaryNeutral),
