@@ -64,6 +64,18 @@ void main() {
       expect(result.failure, isNull);
     });
 
+    test('signIn should return an auth failure when firebase rejects login', () async {
+      when(() => mockFirebaseAuth.signInWithEmailAndPassword(
+            email: tEmail,
+            password: tPassword,
+          )).thenThrow(FirebaseAuthException(code: 'wrong-password'));
+
+      final result = await repository.signIn(email: tEmail, password: tPassword);
+
+      expect(result.failure, isNotNull);
+      expect(result.user, isNull);
+    });
+
     test('signOut should call firebaseAuth.signOut', () async {
       // arrange
       when(() => mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
@@ -74,6 +86,14 @@ void main() {
       // assert
       verify(() => mockFirebaseAuth.signOut()).called(1);
       expect(result.failure, isNull);
+    });
+
+    test('signOut should return auth failure when signOut throws', () async {
+      when(() => mockFirebaseAuth.signOut()).thenThrow(Exception('sign out failed'));
+
+      final result = await repository.signOut();
+
+      expect(result.failure, isNotNull);
     });
 
     test('getOAuth2AccessToken should return token from currentUser', () async {
