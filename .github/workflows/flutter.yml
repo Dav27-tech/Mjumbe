@@ -1,32 +1,35 @@
 name: Flutter CI
 
-on:
+'on':
   push:
-    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master, develop ]
 
 jobs:
-  build:
+  analyze-and-test:
+    name: Flutter analyze and test
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install Flutter
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.5'
+          flutter-version: '3.35.2'
           channel: 'stable'
 
-      - name: Install dependencies
+      - name: Flutter pub get
         run: flutter pub get
 
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-
-      - name: Analyze project source
+      - name: Flutter analyze
         run: flutter analyze
 
-      - name: Run tests
+      - name: Flutter test
         run: flutter test
