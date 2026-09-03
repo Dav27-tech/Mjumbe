@@ -69,7 +69,16 @@ class ArticleDetailPage extends StatelessWidget {
                   ? CachedNetworkImage(
                 imageUrl: article.urlToImage!,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Container(color: Colors.grey.shade100),
+                width: double.infinity,
+                height: 300,
+                memCacheWidth: 1200,
+                memCacheHeight: 800,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey.shade100,
+                  child: const Center(
+                    child: Icon(Icons.image_rounded, size: 48, color: Colors.grey),
+                  ),
+                ),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey.shade100,
                   child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
