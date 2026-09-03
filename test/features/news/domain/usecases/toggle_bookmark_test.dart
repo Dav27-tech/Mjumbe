@@ -34,4 +34,14 @@ void main() {
     verify(() => mockNewsRepository.toggleBookmark(tArticle)).called(1);
     verifyNoMoreInteractions(mockNewsRepository);
   });
+
+  test('should return failure when bookmark toggle fails', () async {
+    when(() => mockNewsRepository.toggleBookmark(any()))
+        .thenAnswer((_) async => (failure: null, isBookmarked: null));
+
+    final result = await usecase(tArticle);
+
+    expect(result.isBookmarked, isNull);
+    verify(() => mockNewsRepository.toggleBookmark(tArticle)).called(1);
+  });
 }
