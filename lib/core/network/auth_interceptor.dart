@@ -31,53 +31,60 @@ class AuthInterceptor extends Interceptor {
   void onError(
       DioException err,
       ErrorInterceptorHandler handler,
-      ) async {
+      ) {
     // Gestion du cycle de vie du token OAuth2 : Cas 401 Unauthorized
     if (err.response?.statusCode == 401) {
       if (kDebugMode) {
         print('Network: Erreur 401 détectée. Tentative de rafraîchissement OAuth2...');
       }
 
-      // On force le rafraîchissement du token (OAuth2 Refresh Token Flow)
-      final String? newToken = await _authRepository.getOAuth2AccessToken(forceRefresh: true);
-      
-      if (newToken != null) {
-        if (kDebugMode) {
-          print('Network: Nouveau token obtenu. Rejeu de la requête...');
-        }
-
-        final requestOptions = err.requestOptions;
-        requestOptions.headers['Authorization'] = 'Bearer $newToken';
-
-        // Création d'une instance temporaire pour le rejeu (évite les conflits)
-        final retryDio = Dio(BaseOptions(
-          baseUrl: requestOptions.baseUrl,
-          headers: requestOptions.headers,
-        ));
-        
-        try {
-          final response = await retryDio.request(
-            requestOptions.path,
-            data: requestOptions.data,
-            queryParameters: requestOptions.queryParameters,
-            options: Options(
-              method: requestOptions.method,
-            ),
-          );
-          return handler.resolve(response);
-        } catch (e) {
+      _authRepository.getOAuth2AccessToken(forceRefresh: true).then((newToken) async {
+        if (newToken != null) {
           if (kDebugMode) {
-            print('Network: Échec du rejeu après rafraîchissement : $e');
+            print('Network: Nouveau token obtenu. Rejeu de la requête...');
           }
+
+          final requestOptions = err.requestOptions;
+          requestOptions.headers['Authorization'] = 'Bearer $newToken';
+
+          final retryDio = Dio(BaseOptions(
+            baseUrl: requestOptions.baseUrl,
+            headers: requestOptions.headers,
+          ));
+
+          try {
+            final response = await retryDio.request(
+              requestOptions.path,
+              data: requestOptions.data,
+              queryParameters: requestOptions.queryParameters,
+              options: Options(
+                method: requestOptions.method,
+              ),
+            );
+            handler.resolve(response);
+            return;
+          } catch (e) {
+            if (kDebugMode) {
+              print('Network: Échec du rejeu après rafraîchissement : $e');
+            }
+          }
+        } else {
+          if (kDebugMode) {
+            print('Network: Impossible de rafraîchir le token. Session expirée.');
+          }
+          await _authRepository.signOut();
         }
-      } else {
+
+        handler.next(err);
+      }).catchError((Object error) {
         if (kDebugMode) {
-          print('Network: Impossible de rafraîchir le token. Session expirée.');
+          print('Network: Erreur pendant le rafraîchissement OAuth2 : $error');
         }
-        // Déconnexion forcée si le rafraîchissement échoue (critère de sécurité)
-        await _authRepository.signOut();
-      }
+        handler.next(err);
+      });
+      return;
     }
-    return handler.next(err);
+
+    handler.next(err);
   }
 }
