@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mjumbe/features/news/domain/entities/article_entity.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_bloc.dart';
-import 'package:mjumbe/features/news/presentation/bloc/news_event.dart';
 import 'package:mjumbe/features/news/presentation/bloc/news_state.dart';
 import 'package:mjumbe/features/news/presentation/pages/news_feed_page.dart';
 
