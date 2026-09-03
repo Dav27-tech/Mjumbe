@@ -108,7 +108,7 @@ Key technologies used in the project:
 1. Clone the project:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Dav27-tech/mjumbe
 cd mjumbe
 ```
 
@@ -248,4 +248,3 @@ AMANI MUSAFIRI David
 ## License
 
 This project is released under the MIT License. See [LICENSE](LICENSE) for details.
-
