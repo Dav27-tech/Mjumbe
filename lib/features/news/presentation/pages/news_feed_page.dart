@@ -94,12 +94,9 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
           ),
 
           // Sélecteur de Catégories
-          BlocBuilder<NewsBloc, NewsState>(
-            buildWhen: (previous, current) => current is NewsLoaded,
-            builder: (context, state) {
-              final String activeCategory =
-              state is NewsLoaded ? state.activeCategory : 'general';
-
+          BlocSelector<NewsBloc, NewsState, String>(
+            selector: (state) => state is NewsLoaded ? state.activeCategory : 'general',
+            builder: (context, activeCategory) {
               return SizedBox(
                 height: 40,
                 child: ListView.builder(
@@ -239,7 +236,15 @@ class _NewsCard extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: article.urlToImage!,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(color: Colors.grey.shade100),
+                    width: double.infinity,
+                    memCacheWidth: 800,
+                    memCacheHeight: 450,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade100,
+                      child: const Center(
+                        child: Icon(Icons.image_rounded, color: Colors.grey, size: 32),
+                      ),
+                    ),
                     errorWidget: (context, url, error) => Container(
                       color: Colors.grey.shade100,
                       child: const Icon(Icons.image_not_supported_rounded, color: Colors.grey),
