@@ -65,6 +65,18 @@ void main() {
       expect(result.articles, tArticles);
       expect(result.failure, isNotNull);
     });
+
+    test('should fallback to cached articles when remote request fails', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemoteDataSource.getTopHeadlines(category: any(named: 'category')))
+          .thenThrow(Exception('Server unavailable'));
+      when(() => mockLocalDataSource.getCachedArticles()).thenAnswer((_) async => tArticles);
+
+      final result = await repository.getTopHeadlines(category: tCategory);
+
+      expect(result.articles, tArticles);
+      expect(result.failure, isNotNull);
+    });
   });
 
   group('searchNews', () {
@@ -79,6 +91,15 @@ void main() {
 
       expect(result.articles, tArticles);
       verify(() => mockRemoteDataSource.searchNews(query: tQuery));
+    });
+
+    test('should return a network failure when offline during search', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+
+      final result = await repository.searchNews(query: tQuery);
+
+      expect(result.articles, isNull);
+      expect(result.failure, isNotNull);
     });
   });
 
@@ -101,6 +122,15 @@ void main() {
 
       expect(result.isBookmarked, false);
       verify(() => mockLocalDataSource.removeBookmark(tArticleModel.id));
+    });
+
+    test('should return cache failure when bookmark toggle fails', () async {
+      when(() => mockLocalDataSource.isBookmarked(any())).thenThrow(Exception('storage failure'));
+
+      final result = await repository.toggleBookmark(tArticleModel);
+
+      expect(result.failure, isNotNull);
+      expect(result.isBookmarked, isNull);
     });
   });
 }
